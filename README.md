@@ -38,9 +38,6 @@ The system features a centralized inventory database for disaster relief materia
 ---
 
 ## User Stories
-* **As a Logistics Officer**, I want to **view material stock levels relative to safety thresholds** so that **I can proactively request donations before a shortage occurs.**
-* **As a Donor**, I want to **see a real-time list of highly requested/low-stock emergency items** so that **my donation addresses immediate, actual needs.**
-* **As a Response Team Volunteer**, I want to **access the SOP sub-menu during a crisis** so that **I can follow accurate deployment protocols and verify allocated supplies.**
 
 ---
 
