@@ -23,26 +23,17 @@ The system features a centralized inventory database for disaster relief materia
 
 ## Core OOP Concepts Applied
 
-### 🔒 Encapsulation
-Internal inventory attributes like `quantity`, `expirationDate`, and `storageLocation` in the `Material` class are set to `private` or `protected`. They can only be modified through controlled methods like `addStock(int amount)` or `dispatchStock(int amount)`, preventing unauthorized or accidental manipulation of critical supply data.
+### Encapsulation
 
-### 🧬 Inheritance
-A base class `Material` stores common properties (ID, name, quantity, threshold). Specific supply categories inherit from this base class to extend functionality without rewriting code, such as `PerishableMaterial` (adding `expirationDate`) and `MedicalMaterial` (adding `hazardLevel` or `requiresPrescription`).
+### Inheritance
 
-### 🧩 Polymorphism
-The base class `Material` declares an abstract method `checkUrgencyStatus()`. This is overridden differently across subclasses:
-* `PerishableMaterial` overrides it to flag urgency based on days left until expiration.
-* `RescueGear` overrides it based on whether stock levels fall below a critical safety threshold.
+### Polymorphism
 
-### 🔍 Abstraction
-An `EmergencyResponse` interface or abstract class hides complex backend logistics. The frontend user interface simply invokes a method like `triggerSOP(String disasterType)` to fetch rules and supply kits without needing to manage the underlying database queries.
+### Abstraction
 
 ---
 
 ## System Architecture & Class Breakdown
-* **`Material` (Base Class):** Represents a generic item in the inventory tracking base quantity and minimum safety thresholds.
-* **`Donation` (Class):** Tracks donor details, date received, item type, and automatically routes data to update the `Material` inventory.
-* **`SOPManager` (Class):** Handles the sub-menu for Standard Operating Procedures, mapping specific emergency types (e.g., Typhoon, Earthquake, Fire) to designated logistics checklists.
 
 ---
 
