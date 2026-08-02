@@ -12,6 +12,7 @@ public class DatabaseManager {
 
     public static void createDatabase(String name) {
         Database db = new Database(name);
+        db.createCsvFile();
         databases.add(db);
     }
 }
