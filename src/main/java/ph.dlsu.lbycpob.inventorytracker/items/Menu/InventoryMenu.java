@@ -32,6 +32,17 @@ public class InventoryMenu extends BaseMenu{
 
     private void displayAllDatabases() { /* TODO */ }
     private void enterDatabase() { /* TODO */ }
-    private void addDatabase() { /* TODO */ }
+    private void addDatabase() {
+        IO.println("Enter Database Name:");
+        String name = scanner.nextLine().trim();
+
+        if (name.isEmpty()) {
+            IO.println("Database name cannot be empty");
+            return;
+        }
+
+        IO.println("Database " + name + " created!");
+    }
+
     private void deleteDatabase() { /* TODO */ }
 }
