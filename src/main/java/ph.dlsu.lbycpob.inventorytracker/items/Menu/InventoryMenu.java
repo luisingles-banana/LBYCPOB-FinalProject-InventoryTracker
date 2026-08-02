@@ -1,5 +1,7 @@
 package ph.dlsu.lbycpob.inventorytracker.items.Menu;
 
+import ph.dlsu.lbycpob.inventorytracker.items.Inventory.DatabaseManager;
+
 public class InventoryMenu extends BaseMenu{
     @Override
     protected void printMenu() {
@@ -41,6 +43,7 @@ public class InventoryMenu extends BaseMenu{
             return;
         }
 
+        DatabaseManager.createDatabase(name);
         IO.println("Database " + name + " created!");
     }
 
