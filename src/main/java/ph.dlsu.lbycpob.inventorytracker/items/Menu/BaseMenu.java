@@ -1,4 +1,4 @@
-package ph.dlsu.lbycpob.inventorytracker.items;
+package ph.dlsu.lbycpob.inventorytracker.items.Menu;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package ph.dlsu.lbycpob.inventorytracker.items;
+package ph.dlsu.lbycpob.inventorytracker.items.Menu;
 
 public class Menu extends BaseMenu{
 
@@ -26,6 +26,6 @@ public class Menu extends BaseMenu{
         return true;
     }
 
-    private void enterInventory() { /* TODO */ }
+    private void enterInventory() { new InventoryMenu().run(); }
     private void enterFinance() { /* TODO */ }
 }
