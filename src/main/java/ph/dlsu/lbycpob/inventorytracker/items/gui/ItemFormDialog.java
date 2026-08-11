@@ -73,3 +73,45 @@ public class ItemFormDialog extends JDialog {
         setResizable(false);
         setLocationRelativeTo(owner);
     }
+
+    private void addRow(JPanel form, GridBagConstraints c, int row, String label, JComponent field) {
+        c.gridx = 0;
+        c.gridy = row;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        JLabel l = new JLabel(label);
+        l.setFont(Theme.FONT_BODY_BOLD);
+        form.add(l, c);
+
+        c.gridx = 1;
+        c.weightx = 1;
+        form.add(field, c);
+    }
+
+    private void onSave() {
+        String name = nameField.getText().trim();
+        if (name.isEmpty()) {
+            showError("Enter an item name.");
+            return;
+        }
+
+        int quantity, low, critical;
+        try {
+            quantity = Integer.parseInt(quantityField.getText().trim());
+            low = Integer.parseInt(lowField.getText().trim());
+            critical = Integer.parseInt(criticalField.getText().trim());
+            if (quantity < 0 || low < 0 || critical < 0) throw new NumberFormatException();
+        } catch (NumberFormatException ex) {
+            showError("Quantity and thresholds must be non-negative whole numbers.");
+            return;
+        }
+
+        LocalDate expirationDate = null;
+        if (perishableCheck.isSelected()) {
+            try {
+                expirationDate = LocalDate.parse(expirationField.getText().trim());
+            } catch (DateTimeParseException ex) {
+                showError("Enter a valid expiration date in YYYY-MM-DD format.");
+                return;
+            }
+        }
