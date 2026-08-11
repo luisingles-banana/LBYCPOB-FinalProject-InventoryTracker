@@ -3,7 +3,6 @@ package ph.dlsu.lbycpob.inventorytracker.items.gui;
 import ph.dlsu.lbycpob.inventorytracker.items.Inventory.Database;
 import ph.dlsu.lbycpob.inventorytracker.items.Inventory.DatabaseManager;
 import ph.dlsu.lbycpob.inventorytracker.items.Inventory.Item;
-import ph.dlsu.lbycpob.inventorytracker.items.Inventory.StockStatus;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

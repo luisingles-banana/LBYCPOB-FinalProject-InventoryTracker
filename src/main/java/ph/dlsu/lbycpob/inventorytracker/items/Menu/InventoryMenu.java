@@ -1,6 +1,9 @@
 package ph.dlsu.lbycpob.inventorytracker.items.Menu;
 
+import ph.dlsu.lbycpob.inventorytracker.items.Inventory.Database;
 import ph.dlsu.lbycpob.inventorytracker.items.Inventory.DatabaseManager;
+
+import java.util.List;
 
 public class InventoryMenu extends BaseMenu{
     @Override
@@ -32,8 +35,30 @@ public class InventoryMenu extends BaseMenu{
         return true;
     }
 
-    private void displayAllDatabases() { /* TODO */ }
-    private void enterDatabase() { /* TODO */ }
+    private void displayAllDatabases() {
+        List<Database> databases = DatabaseManager.listDatabases();
+        if (databases.isEmpty()) {
+            IO.println("No databases yet. Use 'Add Database' to create one.\n");
+            return;
+        }
+        IO.println("Available Databases:");
+        for (Database db : databases) {
+            int itemCount = db.getItems().size();
+            IO.println("  - " + db.getName() + " (" + itemCount + " item type(s))");
+        }
+        IO.println("");
+    }
+
+    private void enterDatabase() {
+        IO.println("Enter Database Name:");
+        String name = scanner.nextLine().trim();
+
+        DatabaseManager.findDatabase(name).ifPresentOrElse(
+                db -> new ItemMenu(db).run(),
+                () -> IO.println("Database '" + name + "' not found.")
+        );
+    }
+
     private void addDatabase() {
         IO.println("Enter Database Name:");
         String name = scanner.nextLine().trim();
@@ -43,9 +68,24 @@ public class InventoryMenu extends BaseMenu{
             return;
         }
 
+        if (DatabaseManager.findDatabase(name).isPresent()) {
+            IO.println("A database named '" + name + "' already exists.");
+            return;
+        }
+
         DatabaseManager.createDatabase(name);
         IO.println("Database " + name + " created!");
     }
 
-    private void deleteDatabase() { /* TODO */ }
+    private void deleteDatabase() {
+        IO.println("Enter Database Name to delete:");
+        String name = scanner.nextLine().trim();
+
+        boolean deleted = DatabaseManager.deleteDatabase(name);
+        if (deleted) {
+            IO.println("Database '" + name + "' deleted.");
+        } else {
+            IO.println("Database '" + name + "' not found.");
+        }
+    }
 }
