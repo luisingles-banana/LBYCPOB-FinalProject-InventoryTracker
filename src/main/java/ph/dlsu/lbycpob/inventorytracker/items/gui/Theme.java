@@ -52,3 +52,58 @@ public final class Theme {
         b.setForeground(Color.WHITE);
         return b;
     }
+
+
+    public static JButton dangerButton(String text) {
+        JButton b = baseButton(text);
+        b.setBackground(RED_EMERGENCY);
+        b.setForeground(Color.WHITE);
+        return b;
+    }
+
+    public static JButton secondaryButton(String text) {
+        JButton b = baseButton(text);
+        b.setBackground(Color.WHITE);
+        b.setForeground(GREEN_DARK);
+        b.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(GREEN_PRIMARY, 1, true),
+                new EmptyBorder(8, 16, 8, 16)));
+        return b;
+    }
+
+    private static JButton baseButton(String text) {
+        JButton b = new JButton(text);
+        b.setFont(FONT_BODY_BOLD);
+        b.setFocusPainted(false);
+        b.setBorder(new EmptyBorder(9, 18, 9, 18));
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setOpaque(true);
+        b.setBorderPainted(false);
+        return b;
+    }
+
+    public static JLabel sectionTitle(String text) {
+        JLabel l = new JLabel(text);
+        l.setFont(FONT_HEADER);
+        l.setForeground(TEXT_DARK);
+        return l;
+    }
+
+    public static JPanel card() {
+        JPanel p = new JPanel();
+        p.setBackground(CARD_WHITE);
+        p.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(BORDER, 1, true),
+                new EmptyBorder(16, 18, 16, 18)));
+        return p;
+    }
+
+    public static Color stockColor(String statusName) {
+        return switch (statusName) {
+            case "GREEN" -> STOCK_GREEN;
+            case "YELLOW" -> STOCK_YELLOW;
+            case "RED" -> STOCK_RED;
+            default -> TEXT_MUTED;
+        };
+    }
+}
