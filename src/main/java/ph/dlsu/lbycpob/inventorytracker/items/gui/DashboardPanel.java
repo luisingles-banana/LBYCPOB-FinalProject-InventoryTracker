@@ -10,11 +10,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
 
-/**
- * Landing page: lets the user create a new relief-goods database or open an
- * existing one. Each database is shown as a summary card with Green/Yellow/Red
- * stock counts and an expiring-soon flag, mirroring {@link Database#getDashboardSummary()}.
- */
+
 public class DashboardPanel extends JPanel {
     private final MainFrame mainFrame;
     private final JPanel listPanel = new JPanel();
