@@ -78,3 +78,72 @@ public class ItemMenu extends BaseMenu {
             IO.println("Quantity must be greater than zero.");
             return;
         }
+
+
+        var existing = database.findItem(itemName);
+        if (existing.isPresent()) {
+            existing.get().addStock(quantity);
+            database.saveItems();
+        } else {
+            IO.println("Low stock threshold (Yellow alert level):");
+            int thresholdLow = readInt();
+            IO.println("Critical stock threshold (Red alert level):");
+            int thresholdCritical = readInt();
+
+            IO.println("Expiration date (YYYY-MM-DD), leave blank if non-perishable:");
+            String expInput = scanner.nextLine().trim();
+            LocalDate expirationDate = null;
+            if (!expInput.isEmpty()) {
+                try {
+                    expirationDate = LocalDate.parse(expInput);
+                } catch (DateTimeParseException e) {
+                    IO.println("Invalid date format, treating item as non-perishable.");
+                }
+            }
+
+            try {
+                Item newItem = ItemFactory.create(categoryChoice, itemName, quantity, thresholdCritical, thresholdLow, expirationDate);
+                database.addItem(newItem);
+            } catch (IllegalArgumentException e) {
+                IO.println("Invalid category selection. Donation not logged.");
+                return;
+            }
+        }
+
+        IO.println("Donor name (blank for Anonymous):");
+        String donorName = scanner.nextLine().trim();
+        IO.println("Donor contact (email/phone, optional):");
+        String donorContact = scanner.nextLine().trim();
+
+        String category = database.findItem(itemName).map(Item::getCategory).orElse("Unknown");
+        Donor donor = new Donor(donorName, donorContact);
+        database.logDonation(new Donation(donor, itemName, category, quantity));
+
+        IO.println("Donation logged: " + quantity + " x " + itemName + " from " + donor.getName());
+    }
+
+    private void dispatchItem() {
+        IO.println("Item name to dispatch:");
+        String itemName = scanner.nextLine().trim();
+        IO.println("Quantity to dispatch:");
+        int quantity = readInt();
+
+        boolean ok = database.dispatchItem(itemName, quantity);
+        if (ok) {
+            IO.println("Dispatched " + quantity + " x " + itemName + ".");
+        } else {
+            IO.println("Could not dispatch. Check the item name and available stock.");
+        }
+    }
+
+    private void viewExpiringSoon() {
+        List<Item> expiring = database.getExpiringSoon(7);
+        if (expiring.isEmpty()) {
+            IO.println("No items are expiring within the next 7 days.");
+            return;
+        }
+        IO.println("--- Items Expiring Within 7 Days (deploy first!) ---");
+        for (Item item : expiring) {
+            IO.println(item.toString());
+        }
+    }
