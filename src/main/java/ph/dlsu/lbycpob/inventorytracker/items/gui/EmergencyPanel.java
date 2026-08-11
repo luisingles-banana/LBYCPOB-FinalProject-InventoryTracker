@@ -102,3 +102,47 @@ public class EmergencyPanel extends JPanel {
         category.setForeground(Theme.TEXT_MUTED);
         left.add(name);
         left.add(category);
+
+        JLabel number = new JLabel(contact.getNumber());
+        number.setFont(Theme.FONT_MONO_NUMBER);
+        number.setForeground(contact.isPriority() ? Theme.RED_EMERGENCY : Theme.GREEN_DARK);
+
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        actions.setOpaque(false);
+        JButton call = Theme.dangerButton("\u260E Call");
+        call.addActionListener(e -> CallHelper.call(this, contact.getName(), contact.getNumber()));
+        JButton edit = Theme.secondaryButton("Edit");
+        edit.addActionListener(e -> editContact(contact));
+        JButton delete = Theme.secondaryButton("Delete");
+        delete.addActionListener(e -> deleteContact(contact));
+        actions.add(call);
+        actions.add(edit);
+        actions.add(delete);
+
+        card.add(left, BorderLayout.WEST);
+        card.add(number, BorderLayout.CENTER);
+        card.add(actions, BorderLayout.EAST);
+        return card;
+    }
+
+    private void editContact(EmergencyContact contact) {
+        ContactFormDialog dialog = new ContactFormDialog((Frame) SwingUtilities.getWindowAncestor(this), contact);
+        dialog.setVisible(true);
+        if (dialog.wasSubmitted()) {
+            EmergencyContactRepository.save();
+            refresh();
+            mainFrame.refreshEmergencyContacts();
+        }
+    }
+
+    private void deleteContact(EmergencyContact contact) {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Remove \"" + contact.getName() + "\" from the emergency contacts list?",
+                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (confirm == JOptionPane.YES_OPTION) {
+            EmergencyContactRepository.remove(contact);
+            refresh();
+            mainFrame.refreshEmergencyContacts();
+        }
+    }
+}
