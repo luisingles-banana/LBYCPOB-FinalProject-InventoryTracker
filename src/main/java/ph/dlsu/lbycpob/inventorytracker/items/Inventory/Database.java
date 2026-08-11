@@ -67,3 +67,73 @@ public class Database {
                 .filter(i -> i.getName().equalsIgnoreCase(itemName))
                 .findFirst();
     }
+    public boolean dispatchItem(String itemName, int amount) {
+        Optional<Item> found = findItem(itemName);
+        if (found.isEmpty()) return false;
+        boolean ok = found.get().dispatch(amount);
+        if (ok) saveItems();
+        return ok;
+    }
+
+    public void logDonation(Donation donation) {
+        donations.add(donation);
+        saveDonations();
+    }
+
+    /** First-In, First-Out view: perishable items closest to expiring come first. */
+    public List<Item> getItemsFifo() {
+        List<Item> sorted = new ArrayList<>(items);
+        sorted.sort(Comparator.comparing(
+                (Item i) -> i.isPerishable() ? i.getExpirationDate() : LocalDate.MAX));
+        return sorted;
+    }
+
+    public List<Item> getExpiringSoon(int daysThreshold) {
+        List<Item> result = new ArrayList<>();
+        for (Item item : items) {
+            if (item.isNearingExpiration(daysThreshold) || item.isExpired()) {
+                result.add(item);
+            }
+        }
+        result.sort(Comparator.comparing(Item::getExpirationDate));
+        return result;
+    }
+
+    /** Human readable dashboard summary: counts per alert status + expiring items. */
+    public String getDashboardSummary() {
+        int green = 0, yellow = 0, red = 0;
+        for (Item item : items) {
+            switch (item.getStockStatus()) {
+                case GREEN -> green++;
+                case YELLOW -> yellow++;
+                case RED -> red++;
+            }
+        }
+        List<Item> expiringSoon = getExpiringSoon(7);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Database: ").append(name).append(" | Items: ").append(items.size()).append("\n");
+        sb.append("  Green (Safe): ").append(green)
+                .append("  |  Yellow (Low): ").append(yellow)
+                .append("  |  Red (Critical): ").append(red).append("\n");
+        if (!expiringSoon.isEmpty()) {
+            sb.append("  Expiring within 7 days: ").append(expiringSoon.size())
+                    .append(" item(s) - deploy these first (FIFO)!\n");
+        }
+        return sb.toString();
+    }
+
+    public void saveItems() {
+        try {
+            File dir = new File(DATA_DIR);
+            if (!dir.exists()) dir.mkdirs();
+
+            FileWriter writer = new FileWriter(filePath);
+            writer.write("Name,Category,Quantity,ThresholdLow,ThresholdCritical,ExpirationDate\n");
+            for (Item item : items) {
+                writer.write(item.toCsvRow() + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            IO.println("Error saving database file: " + e.getMessage());
+        }
+    }
