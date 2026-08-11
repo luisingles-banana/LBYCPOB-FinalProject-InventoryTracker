@@ -53,7 +53,6 @@ public final class Theme {
         return b;
     }
 
-
     public static JButton dangerButton(String text) {
         JButton b = baseButton(text);
         b.setBackground(RED_EMERGENCY);
