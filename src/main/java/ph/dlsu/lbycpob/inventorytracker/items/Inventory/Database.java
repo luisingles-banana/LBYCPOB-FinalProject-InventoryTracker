@@ -205,3 +205,12 @@ public class Database {
             IO.println("Warning: could not fully load " + donationsFilePath + " (" + e.getMessage() + ")");
         }
     }
+    public boolean deleteFiles() {
+        boolean ok = true;
+        File csv = new File(filePath);
+        if (csv.exists()) ok = csv.delete();
+        File donationsFile = new File(donationsFilePath);
+        if (donationsFile.exists()) ok = donationsFile.delete() && ok;
+        return ok;
+    }
+}
