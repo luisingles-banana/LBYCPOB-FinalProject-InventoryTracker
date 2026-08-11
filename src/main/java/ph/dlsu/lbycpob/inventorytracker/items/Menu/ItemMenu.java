@@ -147,3 +147,25 @@ public class ItemMenu extends BaseMenu {
             IO.println(item.toString());
         }
     }
+
+
+    private void viewDonationLog() {
+        List<Donation> donations = database.getDonations();
+        if (donations.isEmpty()) {
+            IO.println("No donations logged yet.");
+            return;
+        }
+        IO.println("--- Donation Log ---");
+        for (Donation donation : donations) {
+            IO.println(donation.toString());
+        }
+    }
+
+    private int readInt() {
+        try {
+            return Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+}
