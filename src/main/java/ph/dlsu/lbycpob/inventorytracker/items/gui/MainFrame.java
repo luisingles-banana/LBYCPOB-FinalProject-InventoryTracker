@@ -113,6 +113,7 @@ public class MainFrame extends JFrame {
 
         return sidebar;
     }
+
     private JButton navButton(String text, Runnable onClick) {
         JButton b = new JButton(text);
         b.setFont(Theme.FONT_BODY_BOLD);
