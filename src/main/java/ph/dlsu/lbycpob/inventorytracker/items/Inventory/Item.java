@@ -68,3 +68,68 @@ public abstract class Item {
         this.thresholdCritical = thresholdCritical;
         this.thresholdLow = thresholdLow;
     }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+
+    public LocalDate getDateAdded() {
+        return dateAdded;
+    }
+
+    public boolean isPerishable() {
+        return expirationDate != null;
+    }
+
+    public boolean isExpired() {
+        return isPerishable() && expirationDate.isBefore(LocalDate.now());
+    }
+
+    /** True when a perishable item expires within the given number of days (and isn't already expired). */
+    public boolean isNearingExpiration(int daysThreshold) {
+        if (!isPerishable() || isExpired()) {
+            return false;
+        }
+        return !expirationDate.isAfter(LocalDate.now().plusDays(daysThreshold));
+    }
+
+    /** Dashboard alert level: Green = Safe, Yellow = Low, Red = Critical. */
+    public StockStatus getStockStatus() {
+        if (quantity <= thresholdCritical) {
+            return StockStatus.RED;
+        }
+        if (quantity <= thresholdLow) {
+            return StockStatus.YELLOW;
+        }
+        return StockStatus.GREEN;
+    }
+
+    /** Polymorphic hook implemented by each concrete material type. */
+    public abstract String getCategory();
+
+    /** Serializes this item as one CSV row for persistence. */
+    public String toCsvRow() {
+        String exp = isPerishable() ? expirationDate.toString() : "";
+        return String.join(",",
+                escape(name),
+                escape(getCategory()),
+                String.valueOf(quantity),
+                String.valueOf(thresholdLow),
+                String.valueOf(thresholdCritical),
+                exp);
+    }
+
+    private String escape(String value) {
+        return value.replace(",", " ");
+    }
+
+    @Override
+    public String toString() {
+        String exp = "";
+        if (isPerishable()) {
+            exp = ", Exp: " + expirationDate + (isExpired() ? " [EXPIRED]" : "");
+        }
+        return String.format("[%-14s] %-20s Qty: %-5d Status: %-16s%s",
+                getCategory(), name, quantity, getStockStatus(), exp);
+    }
+}
