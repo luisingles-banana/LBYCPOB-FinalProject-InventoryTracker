@@ -96,3 +96,40 @@ public class InventoryPanel extends JPanel {
             showingFifoView = fifoToggle.isSelected();
             refreshItemTable();
         });
+
+        toolbar.add(addItem);
+        toolbar.add(restock);
+        toolbar.add(dispatch);
+        toolbar.add(logDonation);
+        toolbar.add(fifoToggle);
+
+        header.add(titleLabel);
+        header.add(summaryLabel);
+        header.add(toolbar);
+        return header;
+    }
+
+    private JTabbedPane buildTabs() {
+        JTabbedPane tabs = new JTabbedPane();
+        tabs.setFont(Theme.FONT_BODY_BOLD);
+
+        itemTable.setRowHeight(30);
+        itemTable.setFont(Theme.FONT_BODY);
+        itemTable.getTableHeader().setFont(Theme.FONT_BODY_BOLD);
+        itemTable.setSelectionBackground(new Color(0xDD, 0xF0, 0xE6));
+        itemTable.getColumnModel().getColumn(3).setCellRenderer(new StatusCellRenderer());
+        tabs.addTab("Items", new JScrollPane(itemTable));
+
+        donationTable.setRowHeight(28);
+        donationTable.setFont(Theme.FONT_BODY);
+        donationTable.getTableHeader().setFont(Theme.FONT_BODY_BOLD);
+        tabs.addTab("Donation History", new JScrollPane(donationTable));
+
+        return tabs;
+    }
+
+    public void setDatabase(Database database) {
+        this.database = database;
+        showingFifoView = false;
+        refreshAll();
+    }
