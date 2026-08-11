@@ -95,3 +95,8 @@ public class HotlineQuickDialog extends JDialog {
 
         JButton call = Theme.dangerButton("\u260E Call");
         call.addActionListener(e -> CallHelper.call(this, contact.getName(), contact.getNumber()));
+        row.add(left, BorderLayout.CENTER);
+        row.add(call, BorderLayout.EAST);
+        return row;
+    }
+}
