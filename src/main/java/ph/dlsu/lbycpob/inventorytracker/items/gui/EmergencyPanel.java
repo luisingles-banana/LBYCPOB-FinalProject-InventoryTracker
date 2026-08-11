@@ -51,3 +51,54 @@ public class EmergencyPanel extends JPanel {
         titleBox.setLayout(new BoxLayout(titleBox, BoxLayout.Y_AXIS));
         titleBox.add(title);
         titleBox.add(subtitle);
+
+        JButton addButton = Theme.primaryButton("+ Add Contact");
+        addButton.addActionListener(e -> addContact());
+
+        header.add(titleBox, BorderLayout.WEST);
+        header.add(addButton, BorderLayout.EAST);
+        return header;
+    }
+
+    private void addContact() {
+        ContactFormDialog dialog = new ContactFormDialog((Frame) SwingUtilities.getWindowAncestor(this), null);
+        dialog.setVisible(true);
+        if (dialog.wasSubmitted()) {
+            EmergencyContactRepository.add(dialog.buildContact());
+            refresh();
+            mainFrame.refreshEmergencyContacts();
+        }
+    }
+
+    public void refresh() {
+        listPanel.removeAll();
+        List<EmergencyContact> contacts = EmergencyContactRepository.getAll();
+        for (EmergencyContact contact : contacts) {
+            listPanel.add(buildRow(contact));
+            listPanel.add(Box.createVerticalStrut(10));
+        }
+        listPanel.revalidate();
+        listPanel.repaint();
+    }
+
+    private JPanel buildRow(EmergencyContact contact) {
+        JPanel card = Theme.card();
+        card.setLayout(new BorderLayout(16, 0));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 88));
+        if (contact.isPriority()) {
+            card.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Theme.RED_EMERGENCY, 2, true),
+                    BorderFactory.createEmptyBorder(14, 16, 14, 16)));
+        }
+
+        JPanel left = new JPanel();
+        left.setOpaque(false);
+        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+        JLabel name = new JLabel(contact.getName());
+        name.setFont(Theme.FONT_BODY_BOLD);
+        JLabel category = new JLabel(contact.getCategory());
+        category.setFont(Theme.FONT_SMALL);
+        category.setForeground(Theme.TEXT_MUTED);
+        left.add(name);
+        left.add(category);

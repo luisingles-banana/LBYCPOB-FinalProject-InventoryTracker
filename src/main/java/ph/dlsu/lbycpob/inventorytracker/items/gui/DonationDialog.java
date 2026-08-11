@@ -13,10 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
-/**
- ally via {@link ItemFactory}, matching the
- * "Donation Logging System" feature described in the project README.
- */
+
 public class DonationDialog extends JDialog {
     private static final String[] CATEGORIES = {"Medical Supply", "Food Pack", "Rescue Gear"};
 
