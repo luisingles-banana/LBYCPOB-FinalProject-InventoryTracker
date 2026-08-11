@@ -115,3 +115,17 @@ public class ItemFormDialog extends JDialog {
                 return;
             }
         }
+
+        String category = (String) categoryBox.getSelectedItem();
+        createdItem = ItemFactory.create(category, name, quantity, critical, low, expirationDate);
+        dispose();
+    }
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public Item getCreatedItem() {
+        return createdItem;
+    }
+}
