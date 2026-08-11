@@ -47,7 +47,6 @@ public class InventoryPanel extends JPanel {
 
     private boolean showingFifoView = false;
 
-
     public InventoryPanel(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         setLayout(new BorderLayout());
@@ -246,3 +245,26 @@ public class InventoryPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Enter a positive whole number.", "Invalid Amount", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    private void onLogDonation() {
+        if (database == null) return;
+        DonationDialog dialog = new DonationDialog((Frame) SwingUtilities.getWindowAncestor(this), database);
+        dialog.setVisible(true);
+        if (dialog.wasSubmitted()) {
+            refreshAll();
+        }
+    }
+
+    /** Colors the Status column text/background to match Green/Yellow/Red stock alerts. */
+    private static class StatusCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                       boolean hasFocus, int row, int column) {
+            JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            String status = String.valueOf(value);
+            label.setForeground(Theme.stockColor(status));
+            label.setFont(Theme.FONT_BODY_BOLD);
+            return label;
+        }
+    }
+}
