@@ -9,7 +9,6 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Full-page emergency contacts directory: call/copy any number, and
  * add/edit/delete entries (e.g. a specific department's local extension).
  */
 public class EmergencyPanel extends JPanel {
