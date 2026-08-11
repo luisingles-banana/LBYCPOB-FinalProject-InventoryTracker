@@ -73,3 +73,43 @@ public class MainFrame extends JFrame {
         titleBox.setLayout(new BoxLayout(titleBox, BoxLayout.Y_AXIS));
         titleBox.add(title);
         titleBox.add(subtitle);
+
+        JButton hotlineButton = Theme.dangerButton("\uD83D\uDEA8  Emergency Hotline");
+        hotlineButton.setFont(Theme.FONT_BODY_BOLD);
+        hotlineButton.addActionListener(e -> new HotlineQuickDialog(this).setVisible(true));
+
+        top.add(titleBox, BorderLayout.WEST);
+        top.add(hotlineButton, BorderLayout.EAST);
+        return top;
+    }
+
+    private JPanel buildSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setBackground(Theme.NAVY_LIGHT);
+        sidebar.setPreferredSize(new Dimension(210, 0));
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBorder(new EmptyBorder(18, 0, 18, 0));
+
+        sidebar.add(navButton("\uD83D\uDCCA  Dashboard", () -> showDashboard()));
+        inventoryNavButton = navButton("\uD83D\uDCE6  Inventory", () -> {
+            if (currentDatabase != null) {
+                showInventory(currentDatabase);
+            } else {
+                showDashboard();
+            }
+        });
+        sidebar.add(inventoryNavButton);
+        sidebar.add(navButton("\uD83D\uDCCB  SOP Library", () -> showCard("sop")));
+        sidebar.add(navButton("\u260E  Emergency Contacts", () -> showCard("emergency")));
+
+        sidebar.add(Box.createVerticalGlue());
+
+        JLabel footer = new JLabel("<html><center>LBYCPOB<br>Final Project</center></html>");
+        footer.setFont(Theme.FONT_SMALL);
+        footer.setForeground(new Color(0x8F, 0xA3, 0xA3));
+        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        footer.setBorder(new EmptyBorder(0, 0, 8, 0));
+        sidebar.add(footer);
+
+        return sidebar;
+    }
