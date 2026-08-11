@@ -133,3 +133,63 @@ public class InventoryPanel extends JPanel {
         showingFifoView = false;
         refreshAll();
     }
+
+    private void refreshAll() {
+        if (database == null) return;
+        titleLabel.setText(database.getName());
+        refreshItemTable();
+        refreshDonationTable();
+    }
+
+    private void refreshItemTable() {
+        itemTableModel.setRowCount(0);
+        if (database == null) return;
+
+        int green = 0, yellow = 0, red = 0;
+        for (Item item : database.getItems()) {
+            StockStatus s = item.getStockStatus();
+            if (s == StockStatus.GREEN) green++;
+            else if (s == StockStatus.YELLOW) yellow++;
+            else red++;
+        }
+        int expiringSoon = database.getExpiringSoon(7).size();
+        summaryLabel.setText(String.format(
+                "%d item(s)  •  Safe: %d  •  Low: %d  •  Critical: %d%s",
+                database.getItems().size(), green, yellow, red,
+                expiringSoon > 0 ? "  •  " + expiringSoon + " expiring within 7 days (deploy FIFO first!)" : ""));
+
+        List<Item> rows = showingFifoView ? database.getItemsFifo() : database.getItems();
+        for (Item item : rows) {
+            String exp = item.isPerishable()
+                    ? item.getExpirationDate() + (item.isExpired() ? " [EXPIRED]" : "")
+                    : "—";
+            itemTableModel.addRow(new Object[]{
+                    item.getName(), item.getCategory(), item.getQuantity(),
+                    item.getStockStatus().name(), exp
+            });
+        }
+    }
+
+    private void refreshDonationTable() {
+        donationTableModel.setRowCount(0);
+        if (database == null) return;
+        List<Donation> donations = database.getDonations();
+        for (int i = donations.size() - 1; i >= 0; i--) {
+            Donation d = donations.get(i);
+            donationTableModel.addRow(new Object[]{
+                    d.getDateLogged().format(DATE_FMT), d.getDonor().getName(), d.getDonor().getContact(),
+                    d.getItemName(), d.getCategory(), d.getQuantity()
+            });
+        }
+    }
+
+    private Item getSelectedItem() {
+        int row = itemTable.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Select an item from the table first.",
+                    "No Item Selected", JOptionPane.INFORMATION_MESSAGE);
+            return null;
+        }
+        String name = (String) itemTableModel.getValueAt(row, 0);
+        return database.findItem(name).orElse(null);
+    }
