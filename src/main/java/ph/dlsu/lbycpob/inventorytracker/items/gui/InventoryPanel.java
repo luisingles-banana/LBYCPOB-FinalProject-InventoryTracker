@@ -193,3 +193,56 @@ public class InventoryPanel extends JPanel {
         String name = (String) itemTableModel.getValueAt(row, 0);
         return database.findItem(name).orElse(null);
     }
+
+    private void onAddItem() {
+        if (database == null) return;
+        ItemFormDialog dialog = new ItemFormDialog((Frame) SwingUtilities.getWindowAncestor(this));
+        dialog.setVisible(true);
+        Item created = dialog.getCreatedItem();
+        if (created != null) {
+            if (database.findItem(created.getName()).isPresent()) {
+                JOptionPane.showMessageDialog(this, "An item named \"" + created.getName() + "\" already exists.",
+                        "Duplicate Item", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            database.addItem(created);
+            refreshItemTable();
+        }
+    }
+
+    private void onRestock() {
+        if (database == null) return;
+        Item item = getSelectedItem();
+        if (item == null) return;
+        String input = JOptionPane.showInputDialog(this, "Restock amount for \"" + item.getName() + "\":", "1");
+        if (input == null) return;
+        try {
+            int amount = Integer.parseInt(input.trim());
+            if (amount <= 0) throw new NumberFormatException();
+            item.addStock(amount);
+            database.saveItems();
+            refreshItemTable();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Enter a positive whole number.", "Invalid Amount", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void onDispatch() {
+        if (database == null) return;
+        Item item = getSelectedItem();
+        if (item == null) return;
+        String input = JOptionPane.showInputDialog(this,
+                "Dispatch amount for \"" + item.getName() + "\" (available: " + item.getQuantity() + "):", "1");
+        if (input == null) return;
+        try {
+            int amount = Integer.parseInt(input.trim());
+            boolean ok = database.dispatchItem(item.getName(), amount);
+            if (!ok) {
+                JOptionPane.showMessageDialog(this, "Not enough stock to dispatch that amount.",
+                        "Dispatch Failed", JOptionPane.ERROR_MESSAGE);
+            }
+            refreshItemTable();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Enter a positive whole number.", "Invalid Amount", JOptionPane.ERROR_MESSAGE);
+        }
+    }
