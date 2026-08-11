@@ -14,9 +14,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 /**
- * Modal dialog for logging a donation. If the named item already exists in
- * the database its stock is simply increased; otherwise a new item is
- * created and classified automatically via {@link ItemFactory}, matching the
+ ally via {@link ItemFactory}, matching the
  * "Donation Logging System" feature described in the project README.
  */
 public class DonationDialog extends JDialog {
