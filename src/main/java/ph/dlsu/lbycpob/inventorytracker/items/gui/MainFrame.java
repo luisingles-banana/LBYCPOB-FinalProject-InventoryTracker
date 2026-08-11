@@ -113,3 +113,45 @@ public class MainFrame extends JFrame {
 
         return sidebar;
     }
+    private JButton navButton(String text, Runnable onClick) {
+        JButton b = new JButton(text);
+        b.setFont(Theme.FONT_BODY_BOLD);
+        b.setForeground(Color.WHITE);
+        b.setBackground(Theme.NAVY_LIGHT);
+        b.setHorizontalAlignment(SwingConstants.LEFT);
+        b.setBorder(new EmptyBorder(14, 22, 14, 16));
+        b.setFocusPainted(false);
+        b.setBorderPainted(false);
+        b.setOpaque(true);
+        b.setMaximumSize(new Dimension(Integer.MAX_VALUE, 46));
+        b.setAlignmentX(Component.LEFT_ALIGNMENT);
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.addActionListener(e -> onClick.run());
+        navButtons.add(b);
+        return b;
+    }
+
+    public void showDashboard() {
+        dashboardPanel.refresh();
+        showCard("dashboard");
+    }
+
+    public void showInventory(Database db) {
+        this.currentDatabase = db;
+        inventoryPanel.setDatabase(db);
+        inventoryNavButton.setText("\uD83D\uDCE6  Inventory (" + db.getName() + ")");
+        showCard("inventory");
+    }
+
+    public void refreshEmergencyContacts() {
+        emergencyPanel.refresh();
+    }
+
+    public void showEmergencyContacts() {
+        showCard("emergency");
+    }
+
+    private void showCard(String name) {
+        cardLayout.show(cardPanel, name);
+    }
+}
