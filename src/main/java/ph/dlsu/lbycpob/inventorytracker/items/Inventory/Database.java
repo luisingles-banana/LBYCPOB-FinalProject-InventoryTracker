@@ -137,3 +137,71 @@ public class Database {
             IO.println("Error saving database file: " + e.getMessage());
         }
     }
+
+    public void saveDonations() {
+        try {
+            File dir = new File(DATA_DIR);
+            if (!dir.exists()) dir.mkdirs();
+
+            FileWriter writer = new FileWriter(donationsFilePath);
+            writer.write("DonorName,DonorContact,ItemName,Category,Quantity,DateLogged\n");
+            for (Donation donation : donations) {
+                writer.write(donation.toCsvRow() + "\n");
+            }
+            writer.close();
+        } catch (IOException e) {
+            IO.println("Error saving donations file: " + e.getMessage());
+        }
+    }
+
+    /** Loads previously saved items from disk, if the CSV file already exists. */
+    public void loadFromCsv() {
+        File file = new File(filePath);
+        if (!file.exists()) return;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine(); // header
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+                String[] parts = line.split(",", -1);
+                if (parts.length < 6) continue;
+
+                String itemName = parts[0];
+                String category = parts[1];
+                int quantity = Integer.parseInt(parts[2].trim());
+                int thresholdLow = Integer.parseInt(parts[3].trim());
+                int thresholdCritical = Integer.parseInt(parts[4].trim());
+                String expStr = parts[5].trim();
+                LocalDate expirationDate = expStr.isEmpty() ? null : LocalDate.parse(expStr);
+
+                items.add(ItemFactory.create(category, itemName, quantity, thresholdCritical, thresholdLow, expirationDate));
+            }
+        } catch (IOException | NumberFormatException | java.time.format.DateTimeParseException e) {
+            IO.println("Warning: could not fully load " + filePath + " (" + e.getMessage() + ")");
+        }
+
+        loadDonationsFromCsv();
+    }
+
+    private void loadDonationsFromCsv() {
+        File file = new File(donationsFilePath);
+        if (!file.exists()) return;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine(); // header
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+                String[] parts = line.split(",", -1);
+                if (parts.length < 6) continue;
+
+                Donor donor = new Donor(parts[0], parts[1]);
+                String itemName = parts[2];
+                String category = parts[3];
+                int quantity = Integer.parseInt(parts[4].trim());
+                java.time.LocalDateTime dateLogged = java.time.LocalDateTime.parse(parts[5].trim());
+                donations.add(new Donation(donor, itemName, category, quantity, dateLogged));
+            }
+        } catch (IOException | RuntimeException e) {
+            IO.println("Warning: could not fully load " + donationsFilePath + " (" + e.getMessage() + ")");
+        }
+    }
