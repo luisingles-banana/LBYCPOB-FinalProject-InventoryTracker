@@ -13,11 +13,7 @@ import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * Live dashboard for one relief-goods {@link Database}: item table with
- * color-coded stock status, quick actions (add / restock / dispatch / log
- * donation), a FIFO / expiring-soon view toggle, and a donation history tab.
- */
+
 public class InventoryPanel extends JPanel {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
