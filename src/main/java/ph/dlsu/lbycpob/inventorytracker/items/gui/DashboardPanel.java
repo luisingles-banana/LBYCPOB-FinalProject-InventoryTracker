@@ -95,3 +95,79 @@ public class DashboardPanel extends JPanel {
         listPanel.repaint();
     }
 
+    private JPanel buildCard(Database db) {
+        int green = 0, yellow = 0, red = 0;
+        for (Item item : db.getItems()) {
+            StockStatus s = item.getStockStatus();
+            if (s == StockStatus.GREEN) green++;
+            else if (s == StockStatus.YELLOW) yellow++;
+            else red++;
+        }
+        int expiringSoon = db.getExpiringSoon(7).size();
+
+        JPanel card = Theme.card();
+        card.setLayout(new BorderLayout(16, 0));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+
+        JPanel left = new JPanel();
+        left.setOpaque(false);
+        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+        JLabel name = new JLabel(db.getName());
+        name.setFont(Theme.FONT_HEADER);
+        JLabel meta = new JLabel(db.getItems().size() + " item(s) tracked" +
+                (expiringSoon > 0 ? "  •  " + expiringSoon + " expiring within 7 days" : ""));
+        meta.setFont(Theme.FONT_SMALL);
+        meta.setForeground(expiringSoon > 0 ? Theme.AMBER_WARNING : Theme.TEXT_MUTED);
+        left.add(name);
+        left.add(Box.createVerticalStrut(6));
+        left.add(meta);
+
+        JPanel badges = new JPanel(new FlowLayout(FlowLayout.CENTER, 8, 0));
+        badges.setOpaque(false);
+        badges.add(badge("Safe", green, Theme.STOCK_GREEN));
+        badges.add(badge("Low", yellow, Theme.STOCK_YELLOW));
+        badges.add(badge("Critical", red, Theme.STOCK_RED));
+
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        actions.setOpaque(false);
+        JButton open = Theme.primaryButton("Open →");
+        open.addActionListener(e -> mainFrame.showInventory(db));
+        JButton delete = Theme.secondaryButton("Delete");
+        delete.addActionListener(e -> deleteDatabase(db));
+        actions.add(open);
+        actions.add(delete);
+
+        card.add(left, BorderLayout.WEST);
+        card.add(badges, BorderLayout.CENTER);
+        card.add(actions, BorderLayout.EAST);
+        return card;
+    }
+
+    private JPanel badge(String label, int count, Color color) {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setOpaque(false);
+        JLabel countLabel = new JLabel(String.valueOf(count), SwingConstants.CENTER);
+        countLabel.setFont(Theme.FONT_MONO_NUMBER);
+        countLabel.setForeground(color);
+        countLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel textLabel = new JLabel(label, SwingConstants.CENTER);
+        textLabel.setFont(Theme.FONT_SMALL);
+        textLabel.setForeground(Theme.TEXT_MUTED);
+        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        p.add(countLabel);
+        p.add(textLabel);
+        return p;
+    }
+
+    private void deleteDatabase(Database db) {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Delete database \"" + db.getName() + "\" and its saved CSV files? This cannot be undone.",
+                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (confirm == JOptionPane.YES_OPTION) {
+            DatabaseManager.deleteDatabase(db.getName());
+            refresh();
+        }
+    }
+}
