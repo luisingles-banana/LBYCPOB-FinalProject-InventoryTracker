@@ -140,3 +140,22 @@ public class DonationDialog extends JDialog {
             Item newItem = ItemFactory.create(category, itemName, quantity, 5, 15, expirationDate);
             database.addItem(newItem);
         }
+
+        String donorName = donorNameField.getText().trim();
+        String donorContact = donorContactField.getText().trim();
+        Donor donor = new Donor(donorName, donorContact);
+        Donation donation = new Donation(donor, itemName, category, quantity);
+        database.logDonation(donation);
+
+        submitted = true;
+        dispose();
+    }
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public boolean wasSubmitted() {
+        return submitted;
+    }
+}
