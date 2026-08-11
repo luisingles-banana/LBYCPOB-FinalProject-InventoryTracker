@@ -81,3 +81,7 @@ public class SOPPanel extends JPanel {
         detailPane.setText(html.toString());
         detailPane.setCaretPosition(0);
     }
+    private String escape(String s) {
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
+    }
+}
