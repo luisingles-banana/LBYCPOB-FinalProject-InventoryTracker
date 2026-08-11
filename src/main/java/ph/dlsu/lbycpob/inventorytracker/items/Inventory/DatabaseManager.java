@@ -6,7 +6,7 @@ import java.util.List;
 public class DatabaseManager {
     private static List<Database> databases = new ArrayList<>();
 
-    public List<Database> listDatabases() {
+    public static List<Database> listDatabases() {
         return databases;
     }
 
