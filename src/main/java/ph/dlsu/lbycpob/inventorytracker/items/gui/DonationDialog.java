@@ -45,6 +45,7 @@ public class DonationDialog extends JDialog {
         c.insets = new Insets(6, 6, 6, 6);
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
+
         int row = 0;
         addRow(form, c, row++, "Donor Name:", donorNameField);
         addRow(form, c, row++, "Donor Contact:", donorContactField);
