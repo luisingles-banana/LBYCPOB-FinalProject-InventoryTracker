@@ -67,6 +67,7 @@ public class Database {
                 .filter(i -> i.getName().equalsIgnoreCase(itemName))
                 .findFirst();
     }
+
     public boolean dispatchItem(String itemName, int amount) {
         Optional<Item> found = findItem(itemName);
         if (found.isEmpty()) return false;
@@ -205,6 +206,7 @@ public class Database {
             IO.println("Warning: could not fully load " + donationsFilePath + " (" + e.getMessage() + ")");
         }
     }
+
     public boolean deleteFiles() {
         boolean ok = true;
         File csv = new File(filePath);
