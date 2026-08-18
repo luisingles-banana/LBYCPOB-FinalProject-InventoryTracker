@@ -8,6 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Holds and persists the list of emergency hotlines/contacts shown in the
+ * GUI's Emergency Hotline page and quick-call dialog. Follows the same
+ * data/*.csv persistence pattern used by {@code Database} so contacts survive
+ * across runs and can be edited by the user.
+ */
 public final class EmergencyContactRepository {
     private static final String DATA_DIR = "data";
     private static final String FILE_PATH = DATA_DIR + "/emergency_contacts.csv";
@@ -81,6 +87,11 @@ public final class EmergencyContactRepository {
         }
     }
 
+    /**
+     * Seeds the repository with verified, publicly published emergency numbers
+     * (Philippine national hotlines plus DLSU Manila's official trunk lines).
+     * Users can edit/add campus-office-specific local extensions from the GUI.
+     */
     private static void seedDefaults() {
         CONTACTS.add(new EmergencyContact("National Emergency Hotline", "911", "National", true));
         CONTACTS.add(new EmergencyContact("Philippine Red Cross", "143", "Medical / Rescue", true));
