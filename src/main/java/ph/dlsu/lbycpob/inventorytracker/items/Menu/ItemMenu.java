@@ -79,7 +79,6 @@ public class ItemMenu extends BaseMenu {
             return;
         }
 
-
         var existing = database.findItem(itemName);
         if (existing.isPresent()) {
             existing.get().addStock(quantity);
@@ -147,7 +146,6 @@ public class ItemMenu extends BaseMenu {
             IO.println(item.toString());
         }
     }
-
 
     private void viewDonationLog() {
         List<Donation> donations = database.getDonations();
