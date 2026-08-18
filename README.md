@@ -24,17 +24,16 @@ The system features a centralized inventory database for disaster relief materia
 ## Core OOP Concepts Applied
 
 ### Encapsulation
-
+Private fields across all model classes (Item, Donation, Donor, EmergencyContact, SOP) are protected from direct mutation; state changes are only permitted through validated methods like addStock() and dispatch(), preventing invalid stock levels.
 ### Inheritance
-
+FoodPack, MedicalSupply, and RescueGear all extend the abstract Item class, inheriting shared fields (quantity, thresholds, expirationDate) and behavior (addStock(), dispatch()) without duplicating code across the three material types.
 ### Polymorphism
-
+Each subclass overrides getCategory() to return its own fixed label ("Food Pack", "Medical Supply", "Rescue Gear"), so code that handles a list of Item objects can call the same method and get type-appropriate behavior without checking the concrete class.
 ### Abstraction
-
+Item is declared abstract specifically to hide implementation differences between material types behind one shared interface; callers work with Item's public methods without knowing or caring which concrete subtype they're holding, and internal serialization details (escape(), toCsvRow()) stay hidden from the rest of the system.
 ---
 
 ## System Architecture & Class Breakdown
-
 ---
 
 ## User Stories
