@@ -9,7 +9,11 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-
+/**
+ * Modal dialog for creating a new {@link Item}. Delegates the actual
+ * subclass construction to {@link ItemFactory} so the GUI never needs an
+ * {@code instanceof} check.
+ */
 public class ItemFormDialog extends JDialog {
     private static final String[] CATEGORIES = {"Medical Supply", "Food Pack", "Rescue Gear"};
 
