@@ -5,6 +5,13 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.net.URI;
 
+/**
+ * Attempts to place a call using the OS's registered "tel:" handler (this
+ * works out of the box on many phones/tablets and some desktops with a
+ * softphone installed). Most plain desktop machines have no such handler, so
+ * this always falls back to copying the number to the clipboard and telling
+ * the user to dial it manually — it never silently fails.
+ */
 final class CallHelper {
     private CallHelper() {
     }
