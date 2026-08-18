@@ -60,6 +60,7 @@ public class HotlineQuickDialog extends JDialog {
                 mf.showEmergencyContacts();
             }
         });
+
         JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         footer.setBackground(Theme.CARD_WHITE);
         footer.setBorder(new EmptyBorder(0, 20, 16, 20));
@@ -95,6 +96,7 @@ public class HotlineQuickDialog extends JDialog {
 
         JButton call = Theme.dangerButton("\u260E Call");
         call.addActionListener(e -> CallHelper.call(this, contact.getName(), contact.getNumber()));
+
         row.add(left, BorderLayout.CENTER);
         row.add(call, BorderLayout.EAST);
         return row;
