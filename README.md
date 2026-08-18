@@ -34,6 +34,25 @@ Item is declared abstract specifically to hide implementation differences betwee
 ---
 
 ## System Architecture & Class Breakdown
+### Inventory Layer
+Item (abstract) — base class defining shared stock fields and behavior (addStock, dispatch, thresholds).
+FoodPack, MedicalSupply, RescueGear — concrete item types, each fixing its own category.
+Database / DatabaseManager — handle per-inventory persistence (CSV read/write) and switching between named inventories.
+
+### Donations Layer
+Donor — represents a contributor (name, contact).
+Donation — an immutable record linking a Donor to an item, quantity, and timestamp.
+
+### Emergency Contacts
+EmergencyContact — mutable contact entry (name, number, category, priority) for response teams.
+EmergencyContactRepository — stores and retrieves contact entries.
+
+### SOP Library
+SOP — immutable record pairing a crisis scenario with its protocol steps and required supplies.
+SOPRepository — stores and retrieves SOP entries by scenario.
+
+### Menu/UI Layer
+BaseMenu (abstract) — Template Method base for all CLI sub-menus, defining a shared display/input loop that concrete menus (inventory, donations, SOPs, contacts) fill in.
 ---
 
 ## User Stories
