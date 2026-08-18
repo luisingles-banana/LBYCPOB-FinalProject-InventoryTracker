@@ -31,6 +31,7 @@ FoodPack, MedicalSupply, and RescueGear all extend the abstract Item class, inhe
 Each subclass overrides getCategory() to return its own fixed label ("Food Pack", "Medical Supply", "Rescue Gear"), so code that handles a list of Item objects can call the same method and get type-appropriate behavior without checking the concrete class.
 ### Abstraction
 Item is declared abstract specifically to hide implementation differences between material types behind one shared interface; callers work with Item's public methods without knowing or caring which concrete subtype they're holding, and internal serialization details (escape(), toCsvRow()) stay hidden from the rest of the system.
+
 ---
 
 ## System Architecture & Class Breakdown
@@ -53,14 +54,16 @@ SOPRepository — stores and retrieves SOP entries by scenario.
 
 ### Menu/UI Layer
 BaseMenu (abstract) — Template Method base for all CLI sub-menus, defining a shared display/input loop that concrete menus (inventory, donations, SOPs, contacts) fill in.
+
 ---
 
 ## User Stories
 User Story 1: As a response coordinator, I want to view stock statuses on a dashboard so that I can immediately identify depleted supplies.
 
-User Story 2: As a volunteer, I want to filter items by category (Food, Medical, Rescue) so that I can quick-check critical inventories.
+As an inventory tracker, I want to log contributions with their names, contact, and the items, so we can accurately track incoming donations and update inventory accordingly.
 
 User Story 3: As an emergency worker, I want to access disaster SOPs and hotlines directly so that I can execute rapid emergency responses.
+
 ---
 
 ## Core Features
