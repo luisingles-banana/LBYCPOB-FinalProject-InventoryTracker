@@ -1,10 +1,15 @@
 package ph.dlsu.lbycpob.inventorytracker.items.Emergency;
 
+/**
+ * A single emergency contact/hotline entry (e.g. campus security, national
+ * emergency hotline, nearest hospital). Kept simple and CSV-friendly so it
+ * follows the same encapsulation pattern as the rest of the model layer.
+ */
 public class EmergencyContact {
     private String name;
     private String number;
-    private String category;
-    private boolean priority;
+    private String category; // e.g. Campus Security, Medical, Fire, National
+    private boolean priority; // shown first / highlighted in the quick-call dialog
 
     public EmergencyContact(String name, String number, String category, boolean priority) {
         this.name = name;
