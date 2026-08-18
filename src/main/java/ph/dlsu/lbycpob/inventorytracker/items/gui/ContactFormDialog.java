@@ -6,6 +6,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+/**
+ * Add/Edit modal for an {@link EmergencyContact}. When editing, the passed-in
+ * contact is mutated directly in place; when adding, a new contact is built
+ * and made available via {@link #buildContact()}.
+ */
 public class ContactFormDialog extends JDialog {
     private final JTextField nameField = new JTextField(20);
     private final JTextField numberField = new JTextField(20);
