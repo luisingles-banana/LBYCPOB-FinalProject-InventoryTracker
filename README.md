@@ -56,7 +56,11 @@ BaseMenu (abstract) — Template Method base for all CLI sub-menus, defining a s
 ---
 
 ## User Stories
+User Story 1: As a response coordinator, I want to view stock statuses on a dashboard so that I can immediately identify depleted supplies.
 
+User Story 2: As a volunteer, I want to filter items by category (Food, Medical, Rescue) so that I can quick-check critical inventories.
+
+User Story 3: As an emergency worker, I want to access disaster SOPs and hotlines directly so that I can execute rapid emergency responses.
 ---
 
 ## Core Features
